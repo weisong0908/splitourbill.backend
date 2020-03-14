@@ -15,12 +15,14 @@ namespace splitourbill_backend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly IFriendshipRepository _friendshipRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public UsersController(IUserRepository userRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public UsersController(IUserRepository userRepository, IFriendshipRepository friendshipRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _userRepository = userRepository;
+            _friendshipRepository = friendshipRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -37,7 +39,15 @@ namespace splitourbill_backend.Controllers
         public async Task<IActionResult> GetUser(Guid userId)
         {
             var user = _mapper.Map<UserFullResponse>(await _userRepository.GetUserById(userId));
-            var friends = _mapper.Map<IEnumerable<UserSimpleResponse>>(new List<User>() { new User() { Id = Guid.NewGuid() } });
+            var frienships = await _friendshipRepository.GetFriendshipsByUserId(userId);
+            var friends = new List<UserSimpleResponse>();
+            foreach (var frienship in frienships)
+            {
+                if (frienship.Requestor == userId)
+                    friends.Add(_mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(frienship.Requestee)));
+                else
+                    friends.Add(_mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(frienship.Requestor)));
+            }
 
             user.Friends = friends;
 

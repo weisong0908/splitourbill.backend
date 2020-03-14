@@ -35,6 +35,7 @@ namespace splitourbill_backend
             services.AddAutoMapper(configAction => configAction.AddProfile<BackendMappingProfile>(), typeof(Startup));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IFriendshipRepository, FriendshipRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
