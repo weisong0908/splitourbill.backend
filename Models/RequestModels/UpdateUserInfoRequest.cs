@@ -1,9 +1,8 @@
 using System;
-using System.Text.Json.Serialization;
 
-namespace splitourbill_backend.Models.DomainModels
+namespace splitourbill_backend.Models.RequestModels
 {
-    public class User
+    public class UpdateUserInfoRequest
     {
         public Guid Id { get; set; }
         public string Username { get; set; }
