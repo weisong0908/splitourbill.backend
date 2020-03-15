@@ -8,9 +8,9 @@ namespace splitourbill_backend.Models.DomainModels
         [JsonPropertyName("id")]
         public Guid Id { get; set; }
         [JsonPropertyName("requestor")]
-        public Guid Requestor { get; set; }
+        public Guid RequestorId { get; set; }
         [JsonPropertyName("requestee")]
-        public Guid Requestee { get; set; }
+        public Guid RequesteeId { get; set; }
         [JsonPropertyName("status")]
         public string Status { get; set; }
     }

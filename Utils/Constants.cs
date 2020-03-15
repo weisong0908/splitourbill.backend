@@ -12,6 +12,7 @@ namespace splitourbill_backend.Utils
         public static class RelationshipStatuses
         {
             public const string Accepted = "accepted";
+            public const string Requested = "requested";
         }
     }
 }

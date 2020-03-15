@@ -14,6 +14,8 @@ namespace splitourbill_backend.Mappings
 
             CreateMap<User, UserSimpleResponse>();
             CreateMap<User, UserFullResponse>();
+
+            CreateMap<Friendship, PendingFriendRequestResponse>();
         }
     }
 }

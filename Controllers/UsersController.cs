@@ -43,10 +43,10 @@ namespace splitourbill_backend.Controllers
             var friends = new List<UserSimpleResponse>();
             foreach (var frienship in frienships)
             {
-                if (frienship.Requestor == userId)
-                    friends.Add(_mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(frienship.Requestee)));
+                if (frienship.RequestorId == userId)
+                    friends.Add(_mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(frienship.RequesteeId)));
                 else
-                    friends.Add(_mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(frienship.Requestor)));
+                    friends.Add(_mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(frienship.RequestorId)));
             }
 
             user.Friends = friends;

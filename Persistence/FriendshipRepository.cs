@@ -21,7 +21,16 @@ namespace splitourbill_backend.Persistence
         {
             return await _dbContext.Friendships
                 .Where(f => f.Status == Constants.RelationshipStatuses.Accepted)
-                .Where(f => f.Requestor == userId || f.Requestee == userId).ToListAsync();
+                .Where(f => f.RequestorId == userId || f.RequesteeId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Friendship>> GetPendingFriendRequestsByRequesteeId(Guid requesteeId)
+        {
+            return await _dbContext.Friendships
+                .Where(f => f.RequesteeId == requesteeId)
+                .Where(f => f.Status == Constants.RelationshipStatuses.Requested)
+                .ToListAsync();
         }
     }
 }

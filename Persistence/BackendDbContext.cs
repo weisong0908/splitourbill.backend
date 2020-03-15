@@ -23,8 +23,8 @@ namespace splitourbill_backend.Persistence
 
             modelBuilder.Entity<Friendship>().ToTable(Constants.Database.FriendshipTable, Constants.Database.Schema);
             modelBuilder.Entity<Friendship>().Property(r => r.Id).HasColumnName("id");
-            modelBuilder.Entity<Friendship>().Property(r => r.Requestor).HasColumnName("requestor");
-            modelBuilder.Entity<Friendship>().Property(r => r.Requestee).HasColumnName("requestee");
+            modelBuilder.Entity<Friendship>().Property(r => r.RequestorId).HasColumnName("requestor_id");
+            modelBuilder.Entity<Friendship>().Property(r => r.RequesteeId).HasColumnName("requestee_id");
             modelBuilder.Entity<Friendship>().Property(r => r.Status).HasColumnName("status");
 
             SeedDatabase(modelBuilder);
@@ -44,8 +44,8 @@ namespace splitourbill_backend.Persistence
                 new Friendship()
                 {
                     Id = new Guid("709fb6ba-705a-449b-8060-d09626deca01"),
-                    Requestor = new Guid("f8b784ae-9dea-48e2-8d81-20f9dcb532bd"),
-                    Requestee = new Guid("e1db792b-fce0-4355-a9bc-242fbf7232c6"),
+                    RequestorId = new Guid("f8b784ae-9dea-48e2-8d81-20f9dcb532bd"),
+                    RequesteeId = new Guid("e1db792b-fce0-4355-a9bc-242fbf7232c6"),
                     Status = Constants.RelationshipStatuses.Accepted
                 }
             };
