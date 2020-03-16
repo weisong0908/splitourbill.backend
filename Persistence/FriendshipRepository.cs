@@ -32,5 +32,15 @@ namespace splitourbill_backend.Persistence
                 .Where(f => f.Status == Constants.RelationshipStatuses.Requested)
                 .ToListAsync();
         }
+
+        public async Task CreateNewFriendship(Friendship friendship)
+        {
+            await _dbContext.Friendships.AddAsync(friendship);
+        }
+
+        public async Task<Friendship> GetFriendship(Guid friendshipId)
+        {
+            return await _dbContext.Friendships.SingleOrDefaultAsync(f => f.Id == friendshipId);
+        }
     }
 }
