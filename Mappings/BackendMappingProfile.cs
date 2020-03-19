@@ -19,6 +19,7 @@ namespace splitourbill_backend.Mappings
             CreateMap<Friendship, PendingFriendRequestResponse>();
             CreateMap<NewFriendshipCreationRequest, Friendship>()
                 .ForMember(f => f.Status, memberOptions => memberOptions.MapFrom(nfcr => Constants.RelationshipStatuses.Requested));
+            CreateMap<UpdateFriendshipRequest, Friendship>();
         }
     }
 }

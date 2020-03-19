@@ -42,5 +42,10 @@ namespace splitourbill_backend.Persistence
         {
             return await _dbContext.Friendships.SingleOrDefaultAsync(f => f.Id == friendshipId);
         }
+
+        public void UpdateFriendship(Friendship friendship)
+        {
+            _dbContext.Friendships.Update(friendship);
+        }
     }
 }

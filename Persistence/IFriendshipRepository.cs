@@ -11,5 +11,6 @@ namespace splitourbill_backend.Persistence
         Task<IEnumerable<Friendship>> GetFriendshipsByUserId(Guid userId);
         Task<IEnumerable<Friendship>> GetPendingFriendRequestsByRequesteeId(Guid requesteeId);
         Task CreateNewFriendship(Friendship friendship);
+        void UpdateFriendship(Friendship friendship);
     }
 }

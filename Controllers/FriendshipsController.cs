@@ -64,5 +64,17 @@ namespace splitourbill_backend.Controllers
 
             return CreatedAtAction(nameof(GetFriendship), new { friendshipId = newFriendship.Id }, newFriendship);
         }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateFriendship([FromBody] UpdateFriendshipRequest updateFriendshipRequest)
+        {
+            var friendship = await _friendshipRepository.GetFriendship(updateFriendshipRequest.Id);
+            friendship.Status = updateFriendshipRequest.Status;
+
+            _friendshipRepository.UpdateFriendship(friendship);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(friendship);
+        }
     }
 }
