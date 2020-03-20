@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using splitourbill_backend.Mappings;
 using splitourbill_backend.Persistence;
 
@@ -30,6 +31,11 @@ namespace splitourbill_backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen(setupAction => setupAction.SwaggerDoc("v1", new OpenApiInfo()
+            {
+                Title = "Backend Service",
+                Version = "1"
+            }));
 
             services.AddDbContext<BackendDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
             services.AddAutoMapper(configAction => configAction.AddProfile<BackendMappingProfile>(), typeof(Startup));
@@ -48,6 +54,9 @@ namespace splitourbill_backend
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(setupAction => setupAction.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend Service V1"));
 
             app.UseRouting();
 
