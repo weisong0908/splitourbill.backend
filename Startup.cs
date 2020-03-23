@@ -31,6 +31,16 @@ namespace splitourbill_backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(setupAction =>
+            {
+                setupAction.AddPolicy("allow clients", configurePolicy =>
+                {
+                    configurePolicy
+                        .WithOrigins(Configuration.GetSection("Security:AllowedCorsOrigins").Get<string[]>())
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
             services.AddSwaggerGen(setupAction => setupAction.SwaggerDoc("v1", new OpenApiInfo()
             {
                 Title = "Backend Service",
@@ -53,7 +63,9 @@ namespace splitourbill_backend
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app.UseCors("allow clients");
+
+            // app.UseHttpsRedirection();
 
             app.UseSwagger();
             app.UseSwaggerUI(setupAction => setupAction.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend Service V1"));
