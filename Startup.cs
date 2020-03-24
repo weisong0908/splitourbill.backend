@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -15,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using splitourbill_backend.Mappings;
 using splitourbill_backend.Persistence;
+using splitourbill_backend.Requirements;
 
 namespace splitourbill_backend
 {
@@ -31,6 +35,7 @@ namespace splitourbill_backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             services.AddCors(setupAction =>
             {
                 setupAction.AddPolicy("allow clients", configurePolicy =>
@@ -41,6 +46,27 @@ namespace splitourbill_backend
                         .AllowAnyMethod();
                 });
             });
+
+            var auth0Domain = $"https://{Configuration.GetSection("Auth0:Domain").Get<string>()}/";
+            services.AddAuthentication(configureOptions =>
+            {
+                configureOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                configureOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(configureOptions =>
+            {
+                configureOptions.Authority = auth0Domain;
+                configureOptions.Audience = Configuration.GetSection("Auth0:ApiIdentifier").Get<string>();
+                configureOptions.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
+            });
+            services.AddAuthorization(configure =>
+            {
+                configure.AddPolicy("read:users", policy => policy.Requirements.Add(new HasScopeRequirement("read:users", auth0Domain)));
+            });
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
             services.AddSwaggerGen(setupAction => setupAction.SwaggerDoc("v1", new OpenApiInfo()
             {
                 Title = "Backend Service",
@@ -72,6 +98,7 @@ namespace splitourbill_backend
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

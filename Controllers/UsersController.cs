@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using splitourbill_backend.Models.DomainModels;
 using splitourbill_backend.Models.RequestModels;
@@ -28,6 +29,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpGet]
+        [Authorize("read:users")]
         public async Task<IActionResult> GetUsers()
         {
             var users = _mapper.Map<IEnumerable<UserSimpleResponse>>(await _userRepository.GetUsers());
