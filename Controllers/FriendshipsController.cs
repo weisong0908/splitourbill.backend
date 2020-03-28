@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using splitourbill_backend.Models.DomainModels;
 using splitourbill_backend.Models.RequestModels;
@@ -28,6 +29,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpGet("{friendshipId}")]
+        [Authorize("read:friendships")]
         public async Task<IActionResult> GetFriendship(Guid friendshipId)
         {
             var friendship = await _friendshipRepository.GetFriendship(friendshipId);
@@ -36,6 +38,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpGet("requests/{userId}")]
+        [Authorize("read:friendships")]
         public async Task<IActionResult> GetFriendRequests(Guid userId)
         {
             var pendingFriendRequestResponses = new List<PendingFriendRequestResponse>();
@@ -55,6 +58,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpPost]
+        [Authorize("write:friendships")]
         public async Task<IActionResult> SendFriendRequest([FromBody] NewFriendshipCreationRequest newFriendshipCreationRequest)
         {
             var newFriendship = _mapper.Map<Friendship>(newFriendshipCreationRequest);
@@ -66,6 +70,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpPatch]
+        [Authorize("write:friendships")]
         public async Task<IActionResult> UpdateFriendship([FromBody] UpdateFriendshipRequest updateFriendshipRequest)
         {
             var friendship = await _friendshipRepository.GetFriendship(updateFriendshipRequest.Id);

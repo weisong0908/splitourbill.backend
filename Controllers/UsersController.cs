@@ -38,6 +38,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpGet("{userId}")]
+        [Authorize("read:users")]
         public async Task<IActionResult> GetUser(Guid userId)
         {
             var user = _mapper.Map<UserFullResponse>(await _userRepository.GetUserById(userId));
@@ -57,6 +58,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpPost]
+        [Authorize("write:users")]
         public async Task<IActionResult> CreateUser([FromBody] NewUserCreationRequest newUserCreationRequest)
         {
             var newUser = _mapper.Map<User>(newUserCreationRequest);
@@ -68,6 +70,7 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpPut]
+        [Authorize("write:users")]
         public async Task<IActionResult> UpdateUser([FromBody] UpdateUserInfoRequest updateUserInfoRequest)
         {
             var user = _mapper.Map<User>(updateUserInfoRequest);

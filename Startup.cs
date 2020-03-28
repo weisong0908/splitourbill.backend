@@ -63,9 +63,11 @@ namespace splitourbill_backend
             });
             services.AddAuthorization(configure =>
             {
-                configure.AddPolicy("read:users", policy => policy.Requirements.Add(new HasScopeRequirement("read:users", auth0Domain)));
+                configure.AddPolicy("read:users", policy => policy.Requirements.Add(new HasPermissionRequirement("read:users", auth0Domain)));
+                configure.AddPolicy("read:friendships", policy => policy.Requirements.Add(new HasPermissionRequirement("read:friendships", auth0Domain)));
+                configure.AddPolicy("write:friendships", policy => policy.Requirements.Add(new HasPermissionRequirement("write:friendships", auth0Domain)));
             });
-            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+            services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
 
             services.AddSwaggerGen(setupAction => setupAction.SwaggerDoc("v1", new OpenApiInfo()
             {
