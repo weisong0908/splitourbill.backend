@@ -6,6 +6,7 @@ namespace splitourbill_backend.Utils
         {
             public const string UserTable = "users";
             public const string FriendshipTable = "friendships";
+            public const string BillPurposeTable = "bill_purposes";
             public const string Schema = "backend";
         }
 
