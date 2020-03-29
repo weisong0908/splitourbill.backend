@@ -80,6 +80,7 @@ namespace splitourbill_backend
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+            services.AddScoped<IBillRepository, BillRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
