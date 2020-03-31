@@ -48,26 +48,18 @@ namespace splitourbill_backend.Controllers
         public async Task<IActionResult> GetBill(Guid billId)
         {
             var bill = await _billRepository.GetBillByBillId(billId);
-            var billResponse = new BillResponse();
-            billResponse.Id = bill.Id;
+            var billResponse = _mapper.Map<BillResponse>(bill);
             billResponse.Initiator = _mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(bill.InitiatorId));
-            billResponse.TotalAmount = bill.TotalAmount;
-            billResponse.Remarks = bill.Remarks;
-            billResponse.DateTime = bill.DateTime;
             billResponse.BillPurpose = (await _billRepository.GetBillPurposes()).SingleOrDefault(p => p.Id == bill.BillPurposeId).Name;
 
             var billSharings = await _billRepository.GetBillSharingsByBillId(billId);
-            var billSharingsResponse = new List<BillSharingResponse>();
-            foreach (var billSharing in billSharings)
+            var billSharingsResponses = _mapper.Map<IEnumerable<BillSharingResponse>>(billSharings);
+            foreach (var billSharingsResponse in billSharingsResponses)
             {
-                billSharingsResponse.Add(new BillSharingResponse()
-                {
-                    Id = billSharing.Id,
-                    Sharer = _mapper.Map<UserSimpleResponse>(await _userRepository.GetUserById(billSharing.SharerId)),
-                    Amount = billSharing.Amount
-                });
+                var user = await _userRepository.GetUserById(billSharings.SingleOrDefault(b => b.Id == billSharingsResponse.Id).SharerId);
+                billSharingsResponse.Sharer = _mapper.Map<UserSimpleResponse>(user);
             }
-            billResponse.BillSharings = billSharingsResponse;
+            billResponse.BillSharings = billSharingsResponses;
 
             return Ok(billResponse);
         }
