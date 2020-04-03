@@ -66,6 +66,8 @@ namespace splitourbill_backend
                 configure.AddPolicy("read:users", policy => policy.Requirements.Add(new HasPermissionRequirement("read:users", auth0Domain)));
                 configure.AddPolicy("read:friendships", policy => policy.Requirements.Add(new HasPermissionRequirement("read:friendships", auth0Domain)));
                 configure.AddPolicy("write:friendships", policy => policy.Requirements.Add(new HasPermissionRequirement("write:friendships", auth0Domain)));
+                configure.AddPolicy("read:bills", policy => policy.Requirements.Add(new HasPermissionRequirement("read:bills", auth0Domain)));
+                configure.AddPolicy("write:bills", policy => policy.Requirements.Add(new HasPermissionRequirement("write:bills", auth0Domain)));
             });
             services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
 

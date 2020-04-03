@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using splitourbill_backend.Filters;
 using splitourbill_backend.Models.ResponseModels;
@@ -47,6 +48,7 @@ namespace splitourbill_backend.Controllers
 
         [HttpGet("{billId}")]
         [ObtainUserId]
+        [Authorize("read:bills")]
         public async Task<IActionResult> GetBill(Guid billId)
         {
             var userId = new Guid(HttpContext.User.Claims.SingleOrDefault(c => c.Type == "user_id").Value);
