@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using splitourbill_backend.Filters;
 using splitourbill_backend.Models.ResponseModels;
 using splitourbill_backend.Persistence;
 
@@ -45,9 +46,10 @@ namespace splitourbill_backend.Controllers
         }
 
         [HttpGet("{billId}")]
+        [ObtainUserId]
         public async Task<IActionResult> GetBill(Guid billId)
         {
-            var userId = new Guid(HttpContext.User.Claims.SingleOrDefault(c => c.Type == "http://localhost:8080/application_user_id").Value);
+            var userId = new Guid(HttpContext.User.Claims.SingleOrDefault(c => c.Type == "user_id").Value);
 
             var bill = await _billRepository.GetBillByBillId(billId);
             var billResponse = _mapper.Map<BillResponse>(bill);
