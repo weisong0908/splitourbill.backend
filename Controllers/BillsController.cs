@@ -73,10 +73,17 @@ namespace splitourbill_backend.Controllers
             return Ok(billResponse);
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Authorize("write:bills")]
         public async Task<IActionResult> UpdateBill([FromBody] UpdateBillRequest updateBillRequest)
         {
+            var bill = await _billRepository.GetBillByBillId(updateBillRequest.Id);
+            bill.TotalAmount = updateBillRequest.TotalAmount;
+            var billSharings = await _billRepository.GetBillSharingsByBillId(updateBillRequest.Id);
+
+            _billRepository.UpdateBill(bill);
+
+            await _unitOfWork.CompleteAsync();
 
             return Ok("ok");
         }

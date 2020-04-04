@@ -10,5 +10,7 @@ namespace splitourbill_backend.Persistence
         Task<IEnumerable<BillPurpose>> GetBillPurposes();
         Task<Bill> GetBillByBillId(Guid billId);
         Task<IEnumerable<BillSharing>> GetBillSharingsByBillId(Guid billId);
+        void UpdateBill(Bill bill);
+
     }
 }

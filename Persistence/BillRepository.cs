@@ -34,5 +34,11 @@ namespace splitourbill_backend.Persistence
 
             return billSharings;
         }
+
+        public void UpdateBill(Bill bill)
+        {
+            _dbContext.Bills.Update(bill);
+        }
+
     }
 }
