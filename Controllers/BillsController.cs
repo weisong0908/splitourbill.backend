@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using splitourbill_backend.Filters;
+using splitourbill_backend.Models.RequestModels;
 using splitourbill_backend.Models.ResponseModels;
 using splitourbill_backend.Persistence;
 
@@ -70,6 +71,14 @@ namespace splitourbill_backend.Controllers
             billResponse.BalanceAmount = billSharings.SingleOrDefault(bs => bs.SharerId == userId).Amount;
 
             return Ok(billResponse);
+        }
+
+        [HttpPatch]
+        [Authorize("write:bills")]
+        public async Task<IActionResult> UpdateBill([FromBody] UpdateBillRequest updateBillRequest)
+        {
+
+            return Ok("ok");
         }
     }
 }
