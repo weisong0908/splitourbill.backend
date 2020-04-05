@@ -78,10 +78,34 @@ namespace splitourbill_backend.Controllers
         public async Task<IActionResult> UpdateBill([FromBody] UpdateBillRequest updateBillRequest)
         {
             var bill = await _billRepository.GetBillByBillId(updateBillRequest.Id);
+            bill.BillPurposeId = (await _billRepository.GetBillPurposes()).SingleOrDefault(p => p.Name == updateBillRequest.BillPurpose).Id;
             bill.TotalAmount = updateBillRequest.TotalAmount;
-            var billSharings = await _billRepository.GetBillSharingsByBillId(updateBillRequest.Id);
+            bill.DateTime = updateBillRequest.DateTime;
+            bill.Remarks = updateBillRequest.Remarks;
 
-            _billRepository.UpdateBill(bill);
+            var billSharingsInDb = await _billRepository.GetBillSharingsByBillId(updateBillRequest.Id);
+
+            foreach (var billSharing in updateBillRequest.BillSharings)
+            {
+                var billSharingsIdsInDb = billSharingsInDb.Select(bs => bs.Id);
+
+                //update bill sharings
+                if (billSharingsIdsInDb.Contains(billSharing.Id))
+                {
+                    var billSharingInDb = billSharingsInDb.SingleOrDefault(bs => bs.Id == billSharing.Id);
+                    if (!decimal.Equals(billSharingInDb.Amount, billSharing.Amount))
+                        billSharingInDb.Amount = billSharing.Amount;
+                }
+                //remove old bill sharings
+            }
+
+            //update own share
+            var ownSharing = billSharingsInDb.SingleOrDefault(bs => bs.SharerId == updateBillRequest.InitiatorId);
+            if (!decimal.Equals(ownSharing.Amount, updateBillRequest.BalanceAmount))
+                ownSharing.Amount = updateBillRequest.BalanceAmount;
+
+            //add new bill sharings
+
 
             await _unitOfWork.CompleteAsync();
 
